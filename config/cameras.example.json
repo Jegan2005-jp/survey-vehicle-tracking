@@ -1,0 +1,70 @@
+{
+  "cameras": [
+    {
+      "name": "FrontCam",
+      "direction_logic": {
+        "mode": "zones",
+        "outside_zone_name": "OUTSIDE",
+        "zone_enter_confirm_frames": 2,
+        "zone_exit_confirm_frames": 1,
+        "zones": [
+          {
+            "name": "North",
+            "type": "polygon",
+            "points_normalized": [
+              [0.00, 0.00],
+              [1.00, 0.00],
+              [1.00, 0.20],
+              [0.00, 0.20]
+            ]
+          },
+          {
+            "name": "South",
+            "type": "polygon",
+            "points_normalized": [
+              [0.00, 0.80],
+              [1.00, 0.80],
+              [1.00, 1.00],
+              [0.00, 1.00]
+            ]
+          },
+          {
+            "name": "West",
+            "type": "polygon",
+            "points_normalized": [
+              [0.00, 0.00],
+              [0.20, 0.00],
+              [0.20, 1.00],
+              [0.00, 1.00]
+            ]
+          },
+          {
+            "name": "East",
+            "type": "polygon",
+            "points_normalized": [
+              [0.80, 0.00],
+              [1.00, 0.00],
+              [1.00, 1.00],
+              [0.80, 1.00]
+            ]
+          }
+        ],
+        "direction_rules": [
+          { "entry_zone": "North", "exit_zone": "South", "direction": "North->South" },
+          { "entry_zone": "South", "exit_zone": "North", "direction": "South->North" },
+          { "entry_zone": "West", "exit_zone": "East", "direction": "West->East" },
+          { "entry_zone": "East", "exit_zone": "West", "direction": "East->West" },
+          { "entry_zone": "North", "exit_zone": "OUTSIDE", "direction": "North->OUTSIDE" },
+          { "entry_zone": "South", "exit_zone": "OUTSIDE", "direction": "South->OUTSIDE" },
+          { "entry_zone": "West", "exit_zone": "OUTSIDE", "direction": "West->OUTSIDE" },
+          { "entry_zone": "East", "exit_zone": "OUTSIDE", "direction": "East->OUTSIDE" },
+          { "entry_zone": "OUTSIDE", "exit_zone": "North", "direction": "North" },
+          { "entry_zone": "OUTSIDE", "exit_zone": "South", "direction": "South" },
+          { "entry_zone": "OUTSIDE", "exit_zone": "West", "direction": "West" },
+          { "entry_zone": "OUTSIDE", "exit_zone": "East", "direction": "East" }
+        ]
+      }
+    }
+  ]
+}
+

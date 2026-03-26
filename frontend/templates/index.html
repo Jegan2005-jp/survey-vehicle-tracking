@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vehicle Survey & Tracking</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <div class="title">Vehicle Survey & Tracking</div>
+            <div class="subtitle">Real-time detection, tracking, direction + Google Sheets logging</div>
+          </div>
+        </div>
+
+        <div class="status">
+          <div class="statusDot" id="statusDot"></div>
+          <div class="statusText" id="statusText">Idle</div>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="card controlCard">
+          <div class="controlRow">
+            <button id="startBtn" class="primaryBtn">Start Survey</button>
+            <button id="stopBtn" class="secondaryBtn" disabled>Stop Survey</button>
+            <button id="resetBtn" class="ghostBtn" disabled>Reset</button>
+          </div>
+
+          <div class="helpText">
+            Click <b>Start Survey</b>, allow camera permissions, then place vehicles in the field of view.
+            Events are logged when a vehicle crosses a configured zone transition.
+          </div>
+
+          <div id="errorBox" class="errorBox hidden"></div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="metricLabel">FPS</div>
+              <div class="metricValue" id="fpsValue">--</div>
+            </div>
+            <div class="metric">
+              <div class="metricLabel">Active Tracks</div>
+              <div class="metricValue" id="activeTracksValue">--</div>
+            </div>
+          </div>
+
+          <div class="panelGrid">
+            <div class="panel">
+              <div class="panelHeader">Vehicle Counts (Active)</div>
+              <div class="panelBody" id="typeCounts"></div>
+            </div>
+            <div class="panel">
+              <div class="panelHeader">Direction Summary (Logged)</div>
+              <div class="panelBody" id="directionCounts"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHeader">Last Logged Event</div>
+            <div class="panelBody" id="lastEvent">
+              <div class="muted">No events yet.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card viewCard">
+          <div class="viewHeader">
+            <div>Camera Preview</div>
+            <div class="muted" id="cameraMeta"></div>
+          </div>
+
+          <div class="videoWrap">
+            <video id="video" class="video" autoplay playsinline muted></video>
+            <canvas id="overlay" class="overlay"></canvas>
+          </div>
+
+          <div class="overlayHint">
+            Zone polygons are drawn on the preview. Tune zones in <code>config/cameras.example.json</code>.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>
+
