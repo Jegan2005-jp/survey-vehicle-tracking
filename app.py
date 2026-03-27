@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -58,6 +58,13 @@ def create_app() -> FastAPI:
     )
 
     session_manager = SurveySessionManager(settings)
+
+    @app.get("/video.mp4")
+    async def get_video():
+        video_path = base_dir / "video.mp4"
+        if not video_path.exists():
+            raise HTTPException(status_code=404, detail="Video file not found")
+        return FileResponse(str(video_path), media_type="video/mp4")
 
     @app.get("/", response_class=HTMLResponse)
     async def index(request: Request):

@@ -28,7 +28,6 @@ let procHeight = 360;
 let zones = [];
 let sessionId = null;
 let ws = null;
-let stream = null;
 
 let isRunning = false;
 let sendTimer = null;
@@ -273,11 +272,11 @@ function stopFrameSend() {
 
 async function stopCamera() {
   try {
-    if (stream) {
-      stream.getTracks().forEach((t) => t.stop());
+    if (video) {
+      video.pause();
+      video.src = "";
     }
   } catch (_) {}
-  stream = null;
 }
 
 function wsClose() {
@@ -296,7 +295,7 @@ async function startSurvey() {
   stopBtn.disabled = false;
   resetBtn.disabled = false;
 
-  const { cameraType, facingMode } = getCameraTypeAndFacingMode();
+  const cameraType = "file";
 
   let startResp = null;
   try {
@@ -337,36 +336,23 @@ async function startSurvey() {
   resizeOverlayToVideo(procWidth, procHeight);
   window.addEventListener("resize", () => resizeOverlayToVideo(procWidth, procHeight));
 
-  // Camera permission + stream.
-  const constraints = {
-    video: { facingMode: { ideal: facingMode } },
-    audio: false,
-  };
-
-  try {
-    stream = await navigator.mediaDevices.getUserMedia(constraints);
-  } catch (e) {
-    // Try fallback without facingMode.
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    } catch (err) {
-      await fetch("/api/session/stop", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId: sessionId }),
-      }).catch(() => {});
-
-      setStatus("error", "Camera blocked");
-      showError("Camera permission denied or camera not available. Please allow camera access and retry.");
-      startBtn.disabled = false;
-      stopBtn.disabled = true;
-      resetBtn.disabled = true;
-      return;
-    }
-  }
-
-  video.srcObject = stream;
-  await video.play().catch(() => {});
+  // Load video file instead of webcam
+  video.src = "/video.mp4";
+  video.loop = true;
+  video.addEventListener('error', (e) => {
+    showError("Video file not found or failed to load. Please ensure video.mp4 is placed in the project root.");
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    resetBtn.disabled = true;
+    setStatus("error", "Video error");
+  });
+  await video.play().catch((e) => {
+    showError("Failed to play video. Please check the video file.");
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    resetBtn.disabled = true;
+    setStatus("error", "Video error");
+  });
 
   // WebSocket for frame processing.
   const proto = window.location.protocol === "https:" ? "wss" : "ws";
